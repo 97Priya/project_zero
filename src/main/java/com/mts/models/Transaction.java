@@ -3,7 +3,7 @@ package com.mts.models;
 import java.util.Date;
 
 public class Transaction {
-    private double tranasction_id;
+    private long tranasction_id;
     private Date time_stamp;
     private double amount;
     private long credit_to;
@@ -20,11 +20,11 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public double getTranasction_id() {
+    public long getTranasction_id() {
         return tranasction_id;
     }
 
-    public void setTranasction_id(double tranasction_id) {
+    public void setTranasction_id(long tranasction_id) {
         this.tranasction_id = tranasction_id;
     }
 
@@ -50,5 +50,16 @@ public class Transaction {
 
     public void setDebit_from(long debit_from) {
         this.debit_from = debit_from;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "tranasction_id=" + tranasction_id +
+                ", time_stamp=" + time_stamp +
+                ", amount=" + amount +
+                ", credit_to=" + credit_to +
+                ", debit_from=" + debit_from +
+                '}';
     }
 }
