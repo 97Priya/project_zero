@@ -38,8 +38,10 @@ public class App {
             transactionService.getLastThreeMonthTransaction(accountNum);
         }else if(input==4){
             System.out.println("Enter two dates in between you wish to see transactions: ");
-            Date toDate=dateParser(scanner);
-            Date fromDate=dateParser(scanner);
+            System.out.print("Enter start date as dd-MM-yyyy:  ");
+            Date toDate=getDate(scanner.next());
+            System.out.print("Enter end date as dd-MM-yyyy:  ");
+            Date fromDate=getDate(scanner.next());
             transactionService.getBetwenDateTransaction(accountNum,toDate,fromDate);
         }else{
             System.out.println("Invalid Input");
@@ -76,29 +78,19 @@ public class App {
         }
     }
 
-    static Date dateParser(Scanner scanner){
-           String str[] = {"year", "month", "day" };
-        String date = "";
+    static Date getDate(String startDate){
 
-        for(int i=0; i<3; i++) {
-            System.out.println("Enter " + str[i] + ": ");
-            date = date + scanner.next() + "/";
-        }
-        date = date.substring(0, date.length()-1);
-        System.out.println("date: "+ date);
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        Date parsedDate = null;
-
-
+        SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
+        java.util.Date date = null;
         try {
-            parsedDate = (Date) dateFormat.parse(date);
+            date = sdf1.parse(startDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-        return parsedDate;
+        java.sql.Date sqlStartDate = new java.sql.Date(date.getTime());
+        return sqlStartDate;
     }
+
 
     public  static void main(String []args){
         new App().startMoneyTransfer();

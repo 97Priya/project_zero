@@ -48,7 +48,7 @@ public class MoneyTransferServiceImpl implements  MoneyTransferService{
             transaction.setDebit_from(senderAccNo);
             transaction.setCredit_to(receiverAccNo);
             transaction.setAmount(amt);
-            transactionDao.saveTransactionA(transaction);
+            transactionDao.saveTransaction(transaction);
             updateAccount(transaction.getCredit_to(),transaction.getAmount(),"credit");
             updateAccount(transaction.getDebit_from(),transaction.getAmount(),"debit");
         }else{
