@@ -34,8 +34,6 @@ public enum AccountTransactionMenu {
 
     @Override
     public String toString() {
-        return "AccountTransactionMenu{" +
-                "name='" + name + '\'' +
-                '}';
+        return name;
     }
 }

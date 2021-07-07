@@ -7,17 +7,19 @@ import com.mts.exception.AccountNotFound;
 import com.mts.exception.BalanceInsufficientException;
 import com.mts.models.Account;
 import com.mts.models.Transaction;
+import org.apache.log4j.Logger;
 
 import java.util.Scanner;
 
 public class MoneyTransferServiceImpl implements  MoneyTransferService{
-
+    private static Logger logger = Logger.getLogger("service1");
     private static MoneyTransferService moneyTransferService;
-    private  static AccountDao accountDao=new AccountDao();
-    private static TransactionDao transactionDao=new TransactionDao();
+    private   AccountDao accountDao;
+    private  TransactionDao transactionDao;
 
-    private MoneyTransferServiceImpl() {
-
+    private MoneyTransferServiceImpl(TransactionDao transactionDao,AccountDao accountDao) {
+            this.transactionDao=transactionDao;
+            this.accountDao=accountDao;
     }
 
     public AmoutTransferDetail getDetails(Scanner scanner) {
@@ -39,9 +41,11 @@ public class MoneyTransferServiceImpl implements  MoneyTransferService{
         long receiverAccNo=amoutTransferDetail.getCredit_to();
         double amt=amoutTransferDetail.getAmount();
         if(accountDao.getAccoutById(receiverAccNo)==null){
+            logger.error("Account "+receiverAccNo +" not found in records");
             throw new AccountNotFound("Account "+receiverAccNo +" not found in records");
         }
         if(accountDao.getAccoutById(senderAccNo)==null){
+            logger.error("Account "+senderAccNo +" not found in records");
             throw new AccountNotFound("Account "+senderAccNo +" not found in records");
         } if(accountDao.isAmountSufficientForTransaction(senderAccNo,amt)){
             Transaction transaction=new Transaction();
@@ -52,6 +56,7 @@ public class MoneyTransferServiceImpl implements  MoneyTransferService{
             updateAccount(transaction.getCredit_to(),transaction.getAmount(),"credit");
             updateAccount(transaction.getDebit_from(),transaction.getAmount(),"debit");
         }else{
+            logger.error("account does'nt have sufficient balance");
             throw new BalanceInsufficientException("your account does'nt have sufficient balance");
         }
 
@@ -68,9 +73,9 @@ public class MoneyTransferServiceImpl implements  MoneyTransferService{
         }
         accountDao.updateAccount(account);
     }
-    public static MoneyTransferService getMoneyTransferService(){
+    public static MoneyTransferService getMoneyTransferService(TransactionDao transactionDao,AccountDao accountDao){
         if(moneyTransferService==null){
-           moneyTransferService= new MoneyTransferServiceImpl();
+           moneyTransferService= new MoneyTransferServiceImpl(transactionDao,accountDao);
         }
             return moneyTransferService;
 

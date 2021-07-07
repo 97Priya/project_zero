@@ -2,6 +2,7 @@ package com.mts;
 
 import com.mts.contants.AccountTransactionMenu;
 import com.mts.contants.Menu;
+import com.mts.dao.AccountDao;
 import com.mts.dao.TransactionDao;
 import com.mts.dto.AmoutTransferDetail;
 import com.mts.models.Account;
@@ -9,6 +10,7 @@ import com.mts.models.Transaction;
 import com.mts.services.MoneyTransferService;
 import com.mts.services.MoneyTransferServiceImpl;
 import com.mts.services.TransactionService;
+import org.apache.log4j.Logger;
 
 import java.sql.Date;
 import java.text.ParseException;
@@ -17,9 +19,10 @@ import java.util.EnumSet;
 import java.util.Scanner;
 
 public class App {
-    MoneyTransferService moneyTransferService= MoneyTransferServiceImpl.getMoneyTransferService();
-    TransactionDao transactionDao=new TransactionDao();
-
+    private static Logger logger = Logger.getLogger("mts");
+    static TransactionDao transactionDao=new TransactionDao();
+    static AccountDao accountDao=new AccountDao();
+    MoneyTransferService moneyTransferService= MoneyTransferServiceImpl.getMoneyTransferService(transactionDao,accountDao);
 
     static void  getRequestedTransactions(Scanner scanner){
         for (AccountTransactionMenu menu:EnumSet.allOf(AccountTransactionMenu.class)){
@@ -29,7 +32,7 @@ public class App {
         input = scanner.nextInt();
         System.out.print("Enter the account Number: ");
         long accountNum=scanner.nextLong();
-        TransactionService transactionService=new TransactionService();
+        TransactionService transactionService=new TransactionService(transactionDao,accountDao);
         if(input==1){
             transactionService.getTopTenTransaction(accountNum);
         }else if(input==2){
@@ -85,7 +88,7 @@ public class App {
         try {
             date = sdf1.parse(startDate);
         } catch (ParseException e) {
-            e.printStackTrace();
+              e.printStackTrace();
         }
         java.sql.Date sqlStartDate = new java.sql.Date(date.getTime());
         return sqlStartDate;
