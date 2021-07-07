@@ -13,6 +13,7 @@ import com.mts.services.TransactionService;
 import org.apache.log4j.Logger;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.EnumSet;
@@ -33,22 +34,27 @@ public class App {
         System.out.print("Enter the account Number: ");
         long accountNum=scanner.nextLong();
         TransactionService transactionService=new TransactionService(transactionDao,accountDao);
-        if(input==1){
-            transactionService.getTopTenTransaction(accountNum);
-        }else if(input==2){
-            transactionService.getThisMonthTransaction(accountNum);
-        }else  if(input==3){
-            transactionService.getLastThreeMonthTransaction(accountNum);
-        }else if(input==4){
-            System.out.println("Enter two dates in between you wish to see transactions: ");
-            System.out.print("Enter start date as dd-MM-yyyy:  ");
-            Date toDate=getDate(scanner.next());
-            System.out.print("Enter end date as dd-MM-yyyy:  ");
-            Date fromDate=getDate(scanner.next());
-            transactionService.getBetwenDateTransaction(accountNum,toDate,fromDate);
-        }else{
-            System.out.println("Invalid Input");
+        try {
+            if (input == 1) {
+                transactionService.getTopTenTransaction(accountNum);
+            } else if (input == 2) {
+                transactionService.getThisMonthTransaction(accountNum);
+            } else if (input == 3) {
+                transactionService.getLastThreeMonthTransaction(accountNum);
+            } else if (input == 4) {
+                System.out.println("Enter two dates in between you wish to see transactions: ");
+                System.out.print("Enter start date as dd-MM-yyyy:  ");
+                Date toDate = getDate(scanner.next());
+                System.out.print("Enter end date as dd-MM-yyyy:  ");
+                Date fromDate = getDate(scanner.next());
+                transactionService.getBetwenDateTransaction(accountNum, toDate, fromDate);
+            } else {
+                System.out.println("Invalid Input");
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
         }
+
     }
 
     void startMoneyTransfer(){

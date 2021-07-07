@@ -11,11 +11,9 @@ import java.util.List;
 
 public class TransactionDao implements TransactionRepository {
 
-    private AccountDao accountDao=new AccountDao();
-
-     public boolean saveTransaction(Transaction transaction) {
+    public boolean saveTransaction(Connection connection,Transaction transaction) {
          ResultSet rs=null;
-        try(Connection connection=ConnectionFactory.getMySqlConnection()) {
+        try{
             Statement stmt = connection.createStatement();
             java.sql.Date myDate= Date.valueOf(LocalDate.now());
             int n= stmt.executeUpdate("INSERT INTO transactions (time_stamp,amount,debit_from,credit_to) VALUES ('"+myDate+"','"+transaction.getAmount()+"','"+transaction.getDebit_from()+"','"+transaction.getCredit_to()+"')");

@@ -10,41 +10,40 @@ import java.sql.Statement;
 
 public class AccountDao {
 
-   public Account getAccoutById(long account_num){
-            Account account=null;
-            ResultSet rs=null;
-        try( Connection connection= ConnectionFactory.getMySqlConnection();){
-            Statement stmt = connection.createStatement();
-            rs = stmt.executeQuery("select * from accounts where account_number="+account_num);
-             while (rs.next()){
-                 account=new Account();
-                account.setAccountNumber(rs.getLong("account_number"));
-                account.setBalance(rs.getDouble("balance"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-         return  account;
-   }
+    Connection connection;
 
-    public Boolean isAmountSufficientForTransaction(long account_num,double amt){
-       Account account=getAccoutById(account_num);
-        if(account.getBalance()>=amt){
-            return  true;
+    public Account getAccoutById(Connection connection, long account_num) throws SQLException {
+        if(connection==null){
+            connection=ConnectionFactory.getMySqlConnection();
         }
-        else{
-            return  false;
+        Account account = null;
+        ResultSet rs = null;
+
+        Statement stmt = connection.createStatement();
+        rs = stmt.executeQuery("select * from accounts where account_number=" + account_num);
+        while (rs.next()) {
+            account = new Account();
+            account.setAccountNumber(rs.getLong("account_number"));
+            account.setBalance(rs.getDouble("balance"));
+        }
+        return account;
+    }
+
+    public Boolean isAmountSufficientForTransaction(Connection connection, long account_num, double amt) throws SQLException {
+        Account account = getAccoutById(connection, account_num);
+        if (account.getBalance() >= amt) {
+            return true;
+        } else {
+            return false;
         }
     }
 
-    public  void updateAccount(Account account){
-         try(Connection connection= ConnectionFactory.getMySqlConnection();) {
-            Statement statement=connection.createStatement();
-            statement.executeUpdate("UPDATE `accounts` set balance= '"+account.getBalance() +"' where account_number='+"+account.getAccountNumber() +"'");
+    public void updateAccount(Connection connection, Account account) throws SQLException {
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        Statement statement = connection.createStatement();
+        statement.executeUpdate("UPDATE `accounts` set balance= '" + account.getBalance() + "' where account_number='+" + account.getAccountNumber() + "'");
+
+
     }
 
 }
