@@ -63,10 +63,10 @@ public class MoneyTransferServiceImpl implements MoneyTransferService {
                 transaction.setAmount(amt);
                 transactionDao.saveTransaction(connection, transaction);
                 updateAccount(connection, transaction.getCredit_to(), transaction.getAmount(), "credit");
-//                boolean b = true;
-//                if (b) {
-//                    throw new IllegalStateException("boo00000om");
-//                }
+               boolean b = true;
+                if (b) {
+                    throw new IllegalStateException("boo00000om");
+                }
                 updateAccount(connection, transaction.getDebit_from(), transaction.getAmount(), "debit");
             } else {
                 logger.error("account does'nt have sufficient balance");
@@ -80,7 +80,12 @@ public class MoneyTransferServiceImpl implements MoneyTransferService {
                 ex.printStackTrace();
             }
             e.printStackTrace();
-        } finally {
+        }catch(AccountNotFound accountNotFound){
+            System.err.println("Account not found");
+        }catch (BalanceInsufficientException balanceInsufficientException){
+            System.err.println("balance insuffiecient");
+        }
+        finally {
             try {
                 connection.close();
             } catch (SQLException e) {

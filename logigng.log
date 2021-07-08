@@ -1,1 +1,5 @@
 2021-07-07 23:28:50 ERROR service1:52 - Account 3 not found in records
+2021-07-08 10:46:50 ERROR service1:52 - Account 3 not found in records
+2021-07-08 10:47:53 ERROR service1:72 - account does'nt have sufficient balance
+2021-07-08 14:26:41 ERROR service1:52 - Account 5 not found in records
+2021-07-08 14:27:05 ERROR service1:72 - account does'nt have sufficient balance

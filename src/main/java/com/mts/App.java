@@ -7,6 +7,7 @@ import com.mts.dao.TransactionDao;
 import com.mts.dto.AmoutTransferDetail;
 import com.mts.models.Account;
 import com.mts.models.Transaction;
+import com.mts.services.AccountServices;
 import com.mts.services.MoneyTransferService;
 import com.mts.services.MoneyTransferServiceImpl;
 import com.mts.services.TransactionService;
@@ -23,6 +24,7 @@ public class App {
     private static Logger logger = Logger.getLogger("mts");
     static TransactionDao transactionDao=new TransactionDao();
     static AccountDao accountDao=new AccountDao();
+    AccountServices accountServices=new AccountServices(accountDao);
     MoneyTransferService moneyTransferService= MoneyTransferServiceImpl.getMoneyTransferService(transactionDao,accountDao);
 
     static void  getRequestedTransactions(Scanner scanner){
@@ -74,6 +76,16 @@ public class App {
                     moneyTransferService.transfer(amoutTransferDetail);
                 } else if (input == 2) {
                     getRequestedTransactions(scanner);
+                }else if(input==3){
+                    System.out.print("Enter your name: ");
+                    accountServices.createNewAccount(scanner.next());
+                }
+                else if(input==4){
+                    System.out.print("Enter your account Number");
+                    long acc=scanner.nextLong();
+                    System.out.print("Enter new balance: ");
+                    double amt=scanner.nextDouble();
+                    accountServices.updateBalance(acc,amt);
                 }
                 else {
                     System.out.println("Invalid option");

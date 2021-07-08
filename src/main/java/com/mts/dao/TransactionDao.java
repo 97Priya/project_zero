@@ -6,6 +6,7 @@ import com.mts.models.Account;
 import com.mts.models.Transaction;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,8 @@ public class TransactionDao implements TransactionRepository {
          ResultSet rs=null;
         try{
             Statement stmt = connection.createStatement();
-            java.sql.Date myDate= Date.valueOf(LocalDate.now());
+            Timestamp myDate= Timestamp.valueOf(LocalDateTime.now());
+
             int n= stmt.executeUpdate("INSERT INTO transactions (time_stamp,amount,debit_from,credit_to) VALUES ('"+myDate+"','"+transaction.getAmount()+"','"+transaction.getDebit_from()+"','"+transaction.getCredit_to()+"')");
         } catch (SQLException e) {
             e.printStackTrace();

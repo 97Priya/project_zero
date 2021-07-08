@@ -12,6 +12,46 @@ public class AccountDao {
 
     Connection connection;
 
+    public void createNewAccount(Account account){
+        if(connection==null){
+            try {
+                connection=ConnectionFactory.getMySqlConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        int n=0;
+        try{
+            Statement stmt = connection.createStatement();
+             n= stmt.executeUpdate("INSERT INTO accounts (account_holder_name) VALUES ('"+account.getAccountHolderName()+"')");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if(n==1)
+        System.out.println("Account created");
+    }
+
+    public  void  updateBalance(Account account){
+        if(connection==null){
+            try {
+               connection= ConnectionFactory.getMySqlConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        int n=0;
+        try{
+            Statement stmt = connection.createStatement();
+            n= stmt.executeUpdate("UPDATE accounts set balance= '" + account.getBalance()+ "' where account_number='+" +account.getAccountNumber() + "'");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if(n==1)
+            System.out.println("Account Updated");
+    }
+
     public Account getAccoutById(Connection connection, long account_num) throws SQLException {
         if(connection==null){
             connection=ConnectionFactory.getMySqlConnection();
